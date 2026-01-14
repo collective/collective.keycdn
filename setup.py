@@ -16,7 +16,7 @@ long_description = "\n\n".join(
 
 setup(
     name="collective.keycdn",
-    version="1.0a1",
+    version="1.0.0",
     description="A Plone addon for purging a KeyCDN cache on content changes.",
     long_description=long_description,
     # Get more from https://pypi.org/classifiers/

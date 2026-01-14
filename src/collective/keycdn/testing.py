@@ -22,6 +22,12 @@ class CollectiveKeycdnLayer(PloneSandboxLayer):
         import plone.restapi
 
         self.loadZCML(package=plone.restapi)
+
+        # Load plone.cachepurging before collective.keycdn
+        # so our purger overrides the default
+        import plone.cachepurging
+
+        self.loadZCML(package=plone.cachepurging)
         self.loadZCML(package=collective.keycdn)
 
     def setUpPloneSite(self, portal):

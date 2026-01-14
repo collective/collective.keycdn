@@ -54,17 +54,18 @@ setup(
         "setuptools",
         # -*- Extra requirements: -*-
         "z3c.jbot",
+        "z3c.unconfigure",
         "plone.api>=1.8.4",
         "plone.app.dexterity",
+        "plone.cachepurging",
+        "requests>=2.20.0",
     ],
     extras_require={
         "test": [
             "plone.app.testing",
-            # Plone KGS does not use this version, because it would break
-            # Remove if your package shall be part of coredev.
-            # plone_coredev tests as of 2016-04-01.
             "plone.testing>=5.0.0",
             "plone.app.contenttypes",
+            "plone.restapi",
         ],
     },
     entry_points="""

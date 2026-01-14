@@ -1,0 +1,20 @@
+<configure
+    xmlns="http://namespaces.zope.org/zope"
+    xmlns:zcml="http://namespaces.zope.org/zcml"
+    i18n_domain="collective.keycdn">
+
+  <!-- Include z3c.unconfigure to allow unregistering -->
+  <include package="z3c.unconfigure" file="meta.zcml" />
+
+  <!-- Unregister the default plone.cachepurging purger -->
+  <unconfigure>
+    <utility component="plone.cachepurging.purger.DEFAULT_PURGER" />
+  </unconfigure>
+
+  <!-- Register KeyCDN purger in its place -->
+  <utility
+      component=".purger.KEYCDN_PURGER"
+      provides="plone.cachepurging.interfaces.IPurger"
+      />
+
+</configure>

@@ -1,6 +1,13 @@
-[report]
-include =
-    src/collective/*
+[run]
+source = collective.keycdn
 omit =
-    */test*
+    */tests/*
     */upgrades/*
+
+[report]
+omit =
+    */tests/*
+    */upgrades/*
+
+[xml]
+output = coverage.xml

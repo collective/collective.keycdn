@@ -18,4 +18,13 @@
       directory="static"
       />
 
+  <!-- Control panel -->
+  <browser:page
+      name="keycdn-settings"
+      for="zope.component.interfaces.ISite"
+      class=".controlpanel.KeycdnSettingsControlPanel"
+      permission="cmf.ManagePortal"
+      layer="collective.keycdn.interfaces.ICollectiveKeycdnLayer"
+  />
+
 </configure>

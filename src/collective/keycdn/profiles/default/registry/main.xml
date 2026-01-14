@@ -3,6 +3,9 @@
     xmlns:i18n="http://xml.zope.org/namespaces/i18n"
     i18n:domain="collective.keycdn">
 
-<!-- -*- extra stuff goes here -*- -->
+  <!-- KeyCDN Purging Settings -->
+  <records interface="collective.keycdn.interfaces.IKeycdnPurgingSettings" />
+
+  <!-- -*- extra stuff goes here -*- -->
 
 </registry>

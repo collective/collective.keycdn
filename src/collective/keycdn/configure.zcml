@@ -16,6 +16,12 @@
   <!-- has to be loaded before permissions are used, so keep above views aso. -->
   <include file="permissions.zcml" />
 
+  <!-- Control panel support -->
+  <include package="plone.app.registry" />
+
+
+  <includeOverrides file="overrides.zcml" />
+
   <include package=".browser" />
 
   <genericsetup:registerProfile

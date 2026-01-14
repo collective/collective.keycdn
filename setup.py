@@ -54,8 +54,11 @@ setup(
         "setuptools",
         # -*- Extra requirements: -*-
         "z3c.jbot",
+        "z3c.unconfigure",
         "plone.api>=1.8.4",
         "plone.app.dexterity",
+        "plone.cachepurging",
+        "requests>=2.20.0",
     ],
     extras_require={
         "test": [

@@ -32,8 +32,10 @@ output.xml
 pip-selfcheck.json
 pyvenv.cfg
 report.html
-.vscode/
 .tox/
 reports/
 venv/
 # excludes
+temp_auto_push.bat
+temp_interactive_push.bat
+.gitignore

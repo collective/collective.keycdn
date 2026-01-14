@@ -33,7 +33,7 @@ setup(
         "Operating System :: OS Independent",
         "License :: OSI Approved :: GNU General Public License v2 (GPLv2)",
     ],
-    keywords="Python Plone CMS",
+    keywords="Python Plone CMS KeyCDN",
     author="Jon Pentland",
     author_email="jon.pentland@pretagov.co.uk",
     url="https://github.com/collective/collective.keycdn",

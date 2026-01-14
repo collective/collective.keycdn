@@ -5,5 +5,5 @@ Changelog
 1.0a1 (unreleased)
 ------------------
 
-- Initial release.
+- New: Initial release of KeyCDN purging package.
   [instification]

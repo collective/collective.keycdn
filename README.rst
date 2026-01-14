@@ -5,10 +5,6 @@
 .. image:: https://github.com/collective/collective.keycdn/actions/workflows/plone-package.yml/badge.svg
     :target: https://github.com/collective/collective.keycdn/actions/workflows/plone-package.yml
 
-.. image:: https://coveralls.io/repos/github/collective/collective.keycdn/badge.svg?branch=main
-    :target: https://coveralls.io/github/collective/collective.keycdn?branch=main
-    :alt: Coveralls
-
 .. image:: https://codecov.io/gh/collective/collective.keycdn/branch/master/graph/badge.svg
     :target: https://codecov.io/gh/collective/collective.keycdn
 
@@ -36,28 +32,18 @@ A Plone addon for purging a KeyCDN cache on content changes.
 Features
 --------
 
-- Can be bullet points
+This package overrides the plone.cachepurging utility to send purge requests to KeyCDN, a commercial content delivery network.
 
-
-Examples
---------
-
-This add-on can be seen in action at the following sites:
-- Is there a page on the internet where everybody can see the features?
-
+It works with the existing caching control panel and a separate add-on control panel for providing api keys and zone configuration information.
 
 Documentation
 -------------
 
-Full documentation for end users can be found in the "docs" folder, and is also available online at http://docs.plone.org/foo/bar
+This package only works if you have a working plone caching setup. It does not automatically purge content on its own.
 
+Once your caching configuration is in place and you have activated the addon, go to the KeyCDN add on control panel and put in your KeyCDN api key and provide the list of zones and urls to purge.
 
-Translations
-------------
-
-This product has been translated into
-
-- Klingon (thanks, K'Plai)
+You can enter multiple zones/sites and each purge will be repeated for each zone.
 
 
 Installation
@@ -75,19 +61,19 @@ Install collective.keycdn by adding it to your buildout::
 
 and then running ``bin/buildout``
 
+Once you have installed the package you can enable the addon via the 'Add-ons' control panel.
+
 
 Authors
 -------
 
-Provided by awesome people ;)
+Jon Pentland [instification], PretaGov
 
 
 Contributors
 ------------
 
-Put your name here, you deserve it!
-
-- ?
+ - instification
 
 
 Contribute
@@ -101,8 +87,7 @@ Contribute
 Support
 -------
 
-If you are having issues, please let us know.
-We have a mailing list located at: project@example.com
+If you are having issues, please create an issue at https://github.com/collective/collective.keycdn/issues
 
 
 License

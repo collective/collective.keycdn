@@ -16,15 +16,15 @@ class TestControlPanel(unittest.TestCase):
 
     def setUp(self):
         """Setup test."""
-        self.portal = self.layer['portal']
-        self.request = self.layer['request']
-        setRoles(self.portal, TEST_USER_ID, ['Manager'])
+        self.portal = self.layer["portal"]
+        self.request = self.layer["request"]
+        setRoles(self.portal, TEST_USER_ID, ["Manager"])
 
     def test_controlpanel_installed(self):
         """Test that control panel is registered."""
-        controlpanel = api.portal.get_tool('portal_controlpanel')
+        controlpanel = api.portal.get_tool("portal_controlpanel")
         actions = [a.getId() for a in controlpanel.listActions()]
-        self.assertIn('keycdn', actions)
+        self.assertIn("keycdn", actions)
 
     def test_controlpanel_view_protected(self):
         """Test that control panel view requires permission."""
@@ -33,20 +33,20 @@ class TestControlPanel(unittest.TestCase):
         # Anonymous should not be able to access
         setRoles(self.portal, TEST_USER_ID, [])
         with self.assertRaises(Unauthorized):
-            self.portal.restrictedTraverse('@@keycdn-settings')
+            self.portal.restrictedTraverse("@@keycdn-settings")
 
     def test_controlpanel_view_accessible_by_manager(self):
         """Test that managers can access control panel."""
-        setRoles(self.portal, TEST_USER_ID, ['Manager'])
-        view = self.portal.restrictedTraverse('@@keycdn-settings')
+        setRoles(self.portal, TEST_USER_ID, ["Manager"])
+        view = self.portal.restrictedTraverse("@@keycdn-settings")
         self.assertIsNotNone(view)
 
     def test_controlpanel_has_correct_title(self):
         """Test that control panel has correct title."""
-        controlpanel = api.portal.get_tool('portal_controlpanel')
-        actions = [a for a in controlpanel.listActions() if a.getId() == 'keycdn']
+        controlpanel = api.portal.get_tool("portal_controlpanel")
+        actions = [a for a in controlpanel.listActions() if a.getId() == "keycdn"]
         self.assertEqual(len(actions), 1)
-        self.assertEqual(actions[0].Title(), 'KeyCDN Settings')
+        self.assertEqual(actions[0].Title(), "KeyCDN Settings")
 
     def test_settings_editable(self):
         """Test that settings can be changed via API."""
@@ -57,8 +57,8 @@ class TestControlPanel(unittest.TestCase):
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IKeycdnPurgingSettings)
 
-        settings.api_key = 'test-key'
-        self.assertEqual(settings.api_key, 'test-key')
+        settings.api_key = "test-key"
+        self.assertEqual(settings.api_key, "test-key")
 
     def test_zones_editable(self):
         """Test that zones can be configured."""
@@ -69,10 +69,10 @@ class TestControlPanel(unittest.TestCase):
         registry = getUtility(IRegistry)
         settings = registry.forInterface(IKeycdnPurgingSettings)
 
-        settings.zones = ('12345|https://example.com', '67890|https://example.co.uk')
+        settings.zones = ("12345|https://example.com", "67890|https://example.co.uk")
         self.assertEqual(len(settings.zones), 2)
-        self.assertEqual(settings.zones[0], '12345|https://example.com')
-        self.assertEqual(settings.zones[1], '67890|https://example.co.uk')
+        self.assertEqual(settings.zones[0], "12345|https://example.com")
+        self.assertEqual(settings.zones[1], "67890|https://example.co.uk")
 
     def test_batch_size_validation(self):
         """Test that batch_size has proper constraints."""

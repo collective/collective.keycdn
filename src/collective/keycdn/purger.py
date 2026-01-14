@@ -59,9 +59,10 @@ class KeycdnPurger:
         """
         try:
             from plone import api
-            controlpanel = api.portal.get_tool('portal_controlpanel')
+
+            controlpanel = api.portal.get_tool("portal_controlpanel")
             actions = [a.getId() for a in controlpanel.listActions()]
-            return 'keycdn' in actions
+            return "keycdn" in actions
         except Exception:
             # If we can't check (no portal, etc), assume not installed
             return False
@@ -108,11 +109,13 @@ class KeycdnPurger:
             return zones
 
         for zone_str in zones_setting:
-            if not zone_str or '|' not in zone_str:
-                logger.warning(f"Invalid zone format (expected 'zone_id|domain'): {zone_str}")
+            if not zone_str or "|" not in zone_str:
+                logger.warning(
+                    f"Invalid zone format (expected 'zone_id|domain'): {zone_str}"
+                )
                 continue
 
-            parts = zone_str.split('|', 1)
+            parts = zone_str.split("|", 1)
             if len(parts) != 2:
                 logger.warning(f"Invalid zone format: {zone_str}")
                 continue
@@ -138,17 +141,17 @@ class KeycdnPurger:
         Returns:
             Path string starting with /
         """
-        if url.startswith('/'):
+        if url.startswith("/"):
             return url
 
         parsed = urlparse(url)
         path = parsed.path
         if parsed.query:
-            path += '?' + parsed.query
+            path += "?" + parsed.query
         if parsed.fragment:
-            path += '#' + parsed.fragment
+            path += "#" + parsed.fragment
 
-        return path if path else '/'
+        return path if path else "/"
 
     def _purge_batch(self, session, urls, zone_id, api_key):
         """Purge a batch of URLs via KeyCDN API.
@@ -167,23 +170,20 @@ class KeycdnPurger:
 
         api_url = f"https://api.keycdn.com/zones/purgeurl/{zone_id}.json"
         headers = {
-            'Authorization': self._get_auth_header(api_key),
-            'Content-Type': 'application/json',
+            "Authorization": self._get_auth_header(api_key),
+            "Content-Type": "application/json",
         }
-        payload = {'urls': list(urls)}
+        payload = {"urls": list(urls)}
 
         try:
             logger.debug(f"Purging {len(urls)} URLs via KeyCDN API for zone {zone_id}")
-            resp = session.delete(
-                api_url,
-                headers=headers,
-                json=payload,
-                timeout=30
-            )
+            resp = session.delete(api_url, headers=headers, json=payload, timeout=30)
 
             if resp.status_code == 200:
                 data = resp.json()
-                logger.info(f"KeyCDN purge successful for zone {zone_id}: {len(urls)} URLs")
+                logger.info(
+                    f"KeyCDN purge successful for zone {zone_id}: {len(urls)} URLs"
+                )
                 logger.debug(f"KeyCDN response: {data}")
                 return True, data, ""
             else:
@@ -234,13 +234,10 @@ class KeycdnPurger:
             with requests.Session() as session:
                 for zone_id, base_domain in zones:
                     # Generate full URL for this zone
-                    full_url = base_domain.rstrip('/') + path
+                    full_url = base_domain.rstrip("/") + path
 
                     success, data, error = self._purge_batch(
-                        session,
-                        [full_url],
-                        zone_id,
-                        settings.api_key
+                        session, [full_url], zone_id, settings.api_key
                     )
 
                     results.append((zone_id, success, data))
@@ -250,10 +247,14 @@ class KeycdnPurger:
                 # Return aggregate status
                 all_success = all(success for _, success, _ in results)
                 status = 200 if all_success else "ERROR"
-                xcache = json.dumps({"zones": [
-                    {"zone_id": zid, "success": success, "data": data}
-                    for zid, success, data in results
-                ]})
+                xcache = json.dumps(
+                    {
+                        "zones": [
+                            {"zone_id": zid, "success": success, "data": data}
+                            for zid, success, data in results
+                        ]
+                    }
+                )
                 xerror = "; ".join(errors) if errors else ""
 
                 return status, xcache, xerror
@@ -402,7 +403,7 @@ class KeycdnWorker(threading.Thread):
                         logger.debug(f"Expanding path {path} to {len(zones)} zones")
 
                         for zone_id, base_domain in zones:
-                            full_url = base_domain.rstrip('/') + path
+                            full_url = base_domain.rstrip("/") + path
 
                             if zone_id not in zone_batches:
                                 zone_batches[zone_id] = set()
@@ -412,8 +413,7 @@ class KeycdnWorker(threading.Thread):
 
                         # Check if any batch should be flushed
                         should_flush = any(
-                            len(batch) >= batch_size
-                            for batch in zone_batches.values()
+                            len(batch) >= batch_size for batch in zone_batches.values()
                         )
 
                         # Also flush if 5 seconds elapsed
@@ -422,9 +422,7 @@ class KeycdnWorker(threading.Thread):
 
                         if should_flush:
                             self._flush_all_batches(
-                                session,
-                                zone_batches,
-                                self.settings.api_key
+                                session, zone_batches, self.settings.api_key
                             )
                             zone_batches.clear()
                             last_flush = time.time()
@@ -433,9 +431,7 @@ class KeycdnWorker(threading.Thread):
                         # Flush any pending items
                         if zone_batches:
                             self._flush_all_batches(
-                                session,
-                                zone_batches,
-                                self.settings.api_key
+                                session, zone_batches, self.settings.api_key
                             )
                             zone_batches.clear()
                             last_flush = time.time()
@@ -443,9 +439,7 @@ class KeycdnWorker(threading.Thread):
                 # Flush remaining items on shutdown
                 if zone_batches:
                     self._flush_all_batches(
-                        session,
-                        zone_batches,
-                        self.settings.api_key
+                        session, zone_batches, self.settings.api_key
                     )
 
         except Exception:
@@ -466,10 +460,7 @@ class KeycdnWorker(threading.Thread):
                 continue
             logger.info(f"Flushing {len(urls)} URLs to KeyCDN zone {zone_id}")
             success, data, error = self.purger._purge_batch(
-                session,
-                urls,
-                zone_id,
-                api_key
+                session, urls, zone_id, api_key
             )
 
             if not success:
